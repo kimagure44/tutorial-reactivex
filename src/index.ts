@@ -10,6 +10,13 @@ const observer$ = new Observable<string>(subscriber => {
   subscriber.next('3');
   subscriber.next('4');
 
+  // Vamos a generar un error aleatorio y probar el callback err
+  const error = Math.floor(Math.random() * 100);
+  console.log(error < 50 ? `Error < 50.... ${error}` : 'Success');
+  if (error < 50) {
+    throw new Error(`Ocurrio el error.... ${error}`);
+  }
+
   // Cuando usamos complete, ya deja de emitir
   subscriber.complete(); 
 
@@ -20,4 +27,5 @@ const observer$ = new Observable<string>(subscriber => {
 });
 
 // Nos suscribimos al observador
-observer$.subscribe(console.log);
+// $.subscribe(response, error, complete);
+observer$.subscribe(response => console.log(response), err => console.error(err), () => console.log('Finalizado'));
