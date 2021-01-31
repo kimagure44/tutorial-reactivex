@@ -21,11 +21,17 @@ const observerOBJ: Observer<number> = {
 };
 
 const counter$ = new Observable<number>(subscriber => {
-  const ID = setInterval(() => subscriber.next(Math.floor(Math.random() * 100)), 1000);
+  const idInterval = setInterval(() => subscriber.next(Math.floor(Math.random() * 100)), 1000);
   return (() => {
-    clearInterval(ID);
+    subscriber.complete();
+    clearInterval(idInterval);
   })
 });
 
 const number1 = counter$.subscribe(observerOBJ);
 const number2 = counter$.subscribe(observerOBJ);
+
+setTimeout(() => {
+  number1.unsubscribe();
+  number2.unsubscribe();
+}, 3000)
