@@ -24,7 +24,7 @@ const counter$ = new Observable<number>(subscriber => {
   const idInterval = setInterval(() => subscriber.next(Math.floor(Math.random() * 100)), 1000);
   return (() => {
     subscriber.complete();
-    clearInterval(idInterval);
+    window.clearInterval(idInterval);
   })
 });
 
