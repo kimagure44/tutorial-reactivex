@@ -1,31 +1,31 @@
 // Importamos los observables de la librería ReactiveX
-import { Observable } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
+import { clearInterval } from 'timers';
 
-// Declaramos nuestro observador
-const observer$ = new Observable<string>(subscriber => {
+const getDate = () => new Intl.DateTimeFormat('default', {
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric'
+}).format(new Date());
 
-  // Emitimos estos valores a nuestro suscriptor
-  subscriber.next('1'); 
-  subscriber.next('2');
-  subscriber.next('3');
-  subscriber.next('4');
-
-  // Vamos a generar un error aleatorio y probar el callback err
-  const error = Math.floor(Math.random() * 100);
-  console.log(error < 50 ? `Error < 50.... ${error}` : 'Success');
-  if (error < 50) {
-    throw new Error(`Ocurrio el error.... ${error}`);
+const observerOBJ: Observer<number> = {
+  next: response => {
+    console.log(`[${getDate()}] - response: ${response}`);
+  },
+  error: err => {
+    console.log(`[${getDate()}] - error: ${err}`);
+  },
+  complete: () => {
+    console.log(`[${getDate()}] - Finalizado`);
   }
+};
 
-  // Cuando usamos complete, ya deja de emitir
-  subscriber.complete(); 
-
-  // Esto ya no se emite
-  subscriber.next('5');
-  subscriber.next('6');
-  subscriber.next('7');
+const counter$ = new Observable<number>(subscriber => {
+  const ID = setInterval(() => subscriber.next(Math.floor(Math.random() * 100)), 1000);
+  return (() => {
+    clearInterval(ID);
+  })
 });
 
-// Nos suscribimos al observador
-// $.subscribe(response, error, complete);
-observer$.subscribe(response => console.log(response), err => console.error(err), () => console.log('Finalizado'));
+const number1 = counter$.subscribe(observerOBJ);
+const number2 = counter$.subscribe(observerOBJ);
