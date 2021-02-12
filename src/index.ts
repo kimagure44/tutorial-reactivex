@@ -1,37 +1,19 @@
-// Importamos los observables de la librería ReactiveX
-import { Observable, Observer } from 'rxjs';
-import { clearInterval } from 'timers';
+import { fromEvent, Observer } from 'rxjs';
 
-const getDate = () => new Intl.DateTimeFormat('default', {
-  hour: 'numeric',
-  minute: 'numeric',
-  second: 'numeric'
-}).format(new Date());
-
-const observerOBJ: Observer<number> = {
+const keyboardCallback: Observer<any> = {
   next: response => {
-    console.log(`[${getDate()}] - response: ${response}`);
+    const source = response.target.dataset.source;
+    const updateModels = document.querySelectorAll(`[data-model="${source}"]`);
+    updateModels.forEach(item => {
+      const hasHTML = ['DIV'].includes(item.tagName);
+      item[hasHTML ? 'innerHTML' : 'value'] = response.target.value;
+    });
   },
-  error: err => {
-    console.log(`[${getDate()}] - error: ${err}`);
-  },
-  complete: () => {
-    console.log(`[${getDate()}] - Finalizado`);
-  }
+  error: err => {},
+  complete: () => {}
 };
 
-const counter$ = new Observable<number>(subscriber => {
-  const idInterval = setInterval(() => subscriber.next(Math.floor(Math.random() * 100)), 1000);
-  return (() => {
-    subscriber.complete();
-    window.clearInterval(idInterval);
-  })
-});
+const keyboardEvent = document.querySelectorAll('[data-reactive="keyup"]');
+const keyboardEvent$ = fromEvent<KeyboardEvent>(keyboardEvent, 'keyup');
 
-const number1 = counter$.subscribe(observerOBJ);
-const number2 = counter$.subscribe(observerOBJ);
-
-setTimeout(() => {
-  number1.unsubscribe();
-  number2.unsubscribe();
-}, 3000)
+keyboardEvent$.subscribe(keyboardCallback);

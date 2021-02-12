@@ -26,6 +26,21 @@
 </head>
 <body>
     <h1>Turorial ReactiveX</h1>
+    <input type="text" placeholder="name" data-reactive="keyup" data-source="name" />
+    <input type="number" placeholder="age" data-reactive="keyup" data-source="age" />
+    <div>
+      <div data-model="name"></div>
+      <div data-model="name"></div>
+      <div data-model="name"></div>
+      <div>
+        <input type="text" readonly data-model="name" />
+      </div>
+      <div data-model="age"></div>
+      <div data-model="age"></div>
+      <div>
+        <input type="text" readonly data-model="age" />
+      </div>
+    </div>
     <script src="bundle.js"></script>
 </body>
 </html>
