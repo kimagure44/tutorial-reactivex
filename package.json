@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "webpack-dev-server --mode development --open --port=8081"
+    "start": "webpack-dev-server --mode development --open --port=8888"
   },
   "main": "index.js",
   "dependencies": {
